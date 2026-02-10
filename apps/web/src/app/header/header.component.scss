@@ -1,0 +1,51 @@
+.main-header {
+  height: 70px;
+  padding: 0 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border-bottom: 1px solid #eee;
+  font-size: 0.95rem;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.4rem;
+  line-height: 1.1;
+
+  &__first {
+    display: block;
+  }
+
+  &__second {
+    display: block;
+  }
+}
+
+.main-header__nav {
+  display: flex;
+  gap: 1.8rem;
+
+  a {
+    text-decoration: none;
+    color: #444;
+
+    &:hover {
+      color: #000;
+    }
+  }
+}
+
+.main-header__right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.icon-btn {
+  border: none;
+  background: transparent;
+  font-size: 1.1rem;
+  cursor: pointer;
+}

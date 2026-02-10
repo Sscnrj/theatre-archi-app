@@ -1,0 +1,55 @@
+<div class="homepage">
+
+    <!-- SEARCH BAR -->
+    <section class="search">
+        <h2 class="search__title">Rechercher un événement</h2>
+
+        <div class="search__bar-row">
+            <!-- Search by title -->
+            <div class="search__input-wrapper">
+                <label class="search__label">Rechercher par nom d’événement</label>
+                <div class="search__input-group">
+                    <input
+                            type="text"
+                            [(ngModel)]="searchTerm"
+                            placeholder="Rechercher..."
+                    />
+                    <span class="search__icon">🔍</span>
+                </div>
+            </div>
+
+            <!-- Sort (not yet implemented but kept for UI design) -->
+            <div class="search__sort-wrapper">
+                <span class="search__sort-label">Trier par</span>
+                <div class="search__select-wrapper">
+                    <select [(ngModel)]="sortBy">
+                        <option value="date">Date</option>
+                        <option value="place">Lieu</option>
+                        <option value="title">Nom</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LOADING STATE -->
+    <div *ngIf="isLoading" class="loading">
+        Chargement des événements Ticketmaster...
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div *ngIf="!isLoading && filteredShows.length === 0" class="empty">
+        Aucun événement ne correspond à votre recherche.
+    </div>
+
+    <!-- SHOW LIST -->
+    <section *ngIf="!isLoading && filteredShows.length > 0" class="shows">
+        <div class="shows__list">
+            <app-show-card
+                    *ngFor="let show of filteredShows"
+                    [show]="show">
+            </app-show-card>
+        </div>
+    </section>
+
+</div>

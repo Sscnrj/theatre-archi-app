@@ -1,0 +1,41 @@
+<a class="show-card-link" [routerLink]="['/show', show.id]">
+    <div class="show-card">
+
+        <div class="show-card__image-wrapper">
+            <img [src]="show.imageUrl" [alt]="show.title" />
+        </div>
+
+        <div class="show-card__content">
+
+            <div class="show-card__title">
+                {{ show.title }}
+            </div>
+
+            <div class="show-card__location">
+                <ng-container *ngIf="show.address; else placeOnly">
+                    {{ show.address }}
+                </ng-container>
+                <ng-template #placeOnly>
+                    {{ show.place }}
+                </ng-template>
+            </div>
+
+            <div class="show-card__date">
+                {{ show.date }}
+            </div>
+
+            <!-- PRIX -->
+            <div class="show-card__price">
+                <ng-container *ngIf="show.priceMin; else noPrice">
+                    À partir de <strong>{{ show.priceMin }}€</strong>
+                </ng-container>
+
+                <ng-template #noPrice>
+                    — €
+                </ng-template>
+            </div>
+
+        </div>
+
+    </div>
+</a>
