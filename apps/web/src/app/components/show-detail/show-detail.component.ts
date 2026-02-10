@@ -32,10 +32,4 @@ export class ShowDetailComponent implements OnInit {
       this.isLoading = false;
     });
   }
-
-  reserve() {
-    if (this.show?.ticketUrl) {
-      window.open(this.show.ticketUrl, '_blank');
-    }
-  }
 }

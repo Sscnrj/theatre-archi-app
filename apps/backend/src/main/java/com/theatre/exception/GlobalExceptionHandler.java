@@ -1,6 +1,8 @@
 package com.theatre.exception;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,61 +18,64 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Object> handleResourceNotFoundException(
-            ResourceNotFoundException ex, WebRequest request) {
+  @ExceptionHandler(ResourceNotFoundException.class)
+  public ResponseEntity<Object> handleResourceNotFoundException(
+    ResourceNotFoundException ex, WebRequest request) {
 
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", HttpStatus.NOT_FOUND.value());
-        body.put("error", "Not Found");
-        body.put("message", ex.getMessage());
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("timestamp", LocalDateTime.now());
+    body.put("status", HttpStatus.NOT_FOUND.value());
+    body.put("error", "Not Found");
+    body.put("message", ex.getMessage());
 
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
-    }
+    return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+  }
 
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<Object> handleIllegalStateException(
-            IllegalStateException ex, WebRequest request) {
+  @ExceptionHandler(IllegalStateException.class)
+  public ResponseEntity<Object> handleIllegalStateException(
+    IllegalStateException ex, WebRequest request) {
 
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", HttpStatus.BAD_REQUEST.value());
-        body.put("error", "Bad Request");
-        body.put("message", ex.getMessage());
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("timestamp", LocalDateTime.now());
+    body.put("status", HttpStatus.BAD_REQUEST.value());
+    body.put("error", "Bad Request");
+    body.put("message", ex.getMessage());
 
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
-    }
+    return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+  }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException ex, WebRequest request) {
+  @Override
+  protected ResponseEntity<Object> handleMethodArgumentNotValid(
+    MethodArgumentNotValidException ex,
+    HttpHeaders headers,
+    HttpStatusCode status,
+    WebRequest request) {
 
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", HttpStatus.BAD_REQUEST.value());
-        body.put("error", "Validation Error");
-        body.put("message", "Validation failed");
-        body.put("details", ex.getBindingResult().getFieldErrors().stream()
-                .map(error -> error.getField() + " : " + error.getDefaultMessage())
-                .toList());
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("timestamp", LocalDateTime.now());
+    body.put("status", status.value());
+    body.put("error", "Validation Error");
+    body.put("message", "Validation failed");
+    body.put("details", ex.getBindingResult().getFieldErrors().stream()
+      .map(error -> error.getField() + " : " + error.getDefaultMessage())
+      .toList());
 
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
-    }
+    return new ResponseEntity<>(body, status);
+  }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Object> handleConstraintViolationException(
-            ConstraintViolationException ex, WebRequest request) {
+  @ExceptionHandler(ConstraintViolationException.class)
+  public ResponseEntity<Object> handleConstraintViolationException(
+    ConstraintViolationException ex, WebRequest request) {
 
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", HttpStatus.BAD_REQUEST.value());
-        body.put("error", "Validation Error");
-        body.put("message", "Validation failed");
-        body.put("details", ex.getConstraintViolations().stream()
-                .map(violation -> violation.getPropertyPath() + " : " + violation.getMessage())
-                .toList());
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("timestamp", LocalDateTime.now());
+    body.put("status", HttpStatus.BAD_REQUEST.value());
+    body.put("error", "Validation Error");
+    body.put("message", "Validation failed");
+    body.put("details", ex.getConstraintViolations().stream()
+      .map(violation -> violation.getPropertyPath() + " : " + violation.getMessage())
+      .toList());
 
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
-    }
+    return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+  }
 }

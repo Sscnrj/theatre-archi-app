@@ -1,11 +1,8 @@
 export interface Show {
   id: number;
   title: string;
-  place: string;
-  address: string;
+  description: string;
   date: string;
+  price: number;
   imageUrl: string;
-  ticketUrl?: string;
-  priceMin?: number;
-  priceMax?: number;
 }

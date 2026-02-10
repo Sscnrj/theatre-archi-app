@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin, map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Show } from '../models/show';
 
 @Injectable({
@@ -8,75 +8,41 @@ import { Show } from '../models/show';
 })
 export class HomepageService {
 
-  private apiKey = 'GPJ2QkZilGujGdD5NhTRGYupe0HfuZfc';
-  private apiUrl = 'https://app.ticketmaster.com/discovery/v2/events.json';
+  // URL de ton API Spring Boot (à adapter selon ton Controller)
+  private apiUrl = `${environment.apiUrl}/spectacles`;
 
-  constructor(private http: HttpClient) {}
+  private apiUrl = 'http://localhost:8080/api/spectacles';
 
-  private getByCountry(country: string): Observable<Show[]> {
-    const params = new URLSearchParams({
-      apikey: this.apiKey,
-      countryCode: country,
-      classificationName: 'music',
-      size: '20',
-      sort: 'date,asc'
-    });
-
-    const url = `${this.apiUrl}?${params.toString()}`;
-
-    return this.http.get<any>(url).pipe(
-        map(response => {
-          const events = response?._embedded?.events || [];
-          return events.map((e: any) => {
-            const venue = e._embedded?.venues?.[0];
-            return {
-              id: e.id,
-              title: e.name,
-              place: venue?.name || 'Lieu inconnu',
-              address: venue?.address?.line1 || '',
-              date: e.dates?.start?.localDate || '',
-              imageUrl: e.images?.[0]?.url || 'assets/img/default.jpg'
-            } as Show;
-          });
-        })
-    );
-  }
-
+  /**
+   * Récupère tous les spectacles depuis ton backend
+   */
   getShows(): Observable<Show[]> {
-    return forkJoin([
-      this.getByCountry('FR'),
-      this.getByCountry('CA')
-    ]).pipe(
-        map(([fr, ca]) => {
-          // fusion FR + CA
-          const all = [...fr, ...ca];
-
-          // tri date asc
-          return all.sort((a, b) => a.date.localeCompare(b.date));
-        })
+    return this.http.get<any[]>(this.apiUrl).pipe(
+      map(data => data.map(s => this.mapToShow(s)))
     );
   }
 
+  /**
+   * Récupère un spectacle précis par son ID
+   */
   getShowDetails(id: string): Observable<Show> {
-    const url = `https://app.ticketmaster.com/discovery/v2/events/${id}.json?apikey=${this.apiKey}`;
-
-    return this.http.get<any>(url).pipe(
-        map(e => {
-          const venue = e._embedded?.venues?.[0];
-          return {
-            id: e.id,
-            title: e.name,
-            place: venue?.name || 'Lieu inconnu',
-            address: venue?.address?.line1 || '',
-            date: e.dates?.start?.localDate || '',
-            imageUrl: e.images?.[0]?.url || 'assets/img/default.jpg',
-            ticketUrl: e.url,
-            priceMin: e.priceRanges?.[0]?.min,
-            priceMax: e.priceRanges?.[0]?.max,
-
-          } as Show;
-        })
+    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
+      map(s => this.mapToShow(s))
     );
   }
 
+  /**
+   * Helper pour transformer le format Java (titre, dateSpectacle)
+   * vers le format TypeScript (title, date)
+   */
+  private mapToShow(s: any): Show {
+    return {
+      id: s.id,
+      title: s.titre,          // Mappe 'titre' -> 'title'
+      description: s.description,
+      date: s.dateSpectacle,   // Mappe 'dateSpectacle' -> 'date'
+      price: s.prix,           // Mappe 'prix' -> 'price'
+      imageUrl: s.imageUrl || 'assets/img/default.jpg'
+    };
+  }
 }

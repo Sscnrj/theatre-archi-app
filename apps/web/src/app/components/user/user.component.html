@@ -1,0 +1,20 @@
+<div class="user-card">
+  <div class="user-header">
+    <div class="avatar">{{ user.nom.charAt(0) }}{{ user.prenom.charAt(0) }}</div>
+    <div class="user-info">
+      <h2 class="user-name">{{ user.prenom }} {{ user.nom }}</h2>
+      <p class="user-role">{{ user.role }}</p>
+    </div>
+  </div>
+
+  <div class="user-details">
+    <div class="detail">
+      <span class="label">Email :</span>
+      <span class="value">{{ user.email }}</span>
+    </div>
+  </div>
+
+  <button class="btn btn-primary">
+    Voir les réservations
+  </button>
+</div>

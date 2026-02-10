@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HomepageService } from '../../services/homepage.service';
 import { Show } from '../../models/show';
 import { ShowCardComponent } from '../show-card/show-card.component';
+import {UserComponent} from '../user/user.component';
 
 @Component({
   selector: 'app-homepage',
@@ -11,7 +12,8 @@ import { ShowCardComponent } from '../show-card/show-card.component';
   imports: [
     CommonModule,
     FormsModule,
-    ShowCardComponent
+    ShowCardComponent,
+    UserComponent
   ],
   templateUrl: './homepage.component.html',
   styleUrls: ['./homepage.component.scss']
@@ -48,9 +50,6 @@ export class HomepageComponent {
     switch (this.sortBy) {
       case 'title':
         result = result.sort((a, b) => a.title.localeCompare(b.title));
-        break;
-      case 'place':
-        result = result.sort((a, b) => a.place.localeCompare(b.place));
         break;
       case 'date':
       default:
