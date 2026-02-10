@@ -8,10 +8,10 @@
         "cwd": "apps/backend"
       }
     },
-    "build": {
+    "liquibase:update": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "mvn clean package",
+        "command": "mvn liquibase:update",
         "cwd": "apps/backend"
       }
     }

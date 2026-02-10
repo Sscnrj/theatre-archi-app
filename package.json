@@ -7,7 +7,8 @@
     "dev:web": "nx run web:serve",
     "dev:mobile": "nx run mobile:serve",
     "dev:db": "docker compose -f infra/docker-compose.yml up db",
-    "dev": "concurrently \"nx run backend:serve\" \"nx run web:serve\" \"nx run mobile:serve\" \"docker compose -f infra/docker-compose.yml up db\""
+    "dev:fullstack": "concurrently \"nx run backend:serve\" \"nx run web:serve\" \"docker compose -f infra/docker-compose.yml up db\"",
+    "dev:fullstackmobile": "concurrently \"nx run backend:serve\" \"nx run mobile:serve\" \"docker compose -f infra/docker-compose.yml up db\""
   },
   "private": true,
   "dependencies": {
