@@ -1,0 +1,49 @@
+<div class="detail-container" *ngIf="show">
+
+    <div class="detail-image-wrapper">
+        <img [src]="show.imageUrl" alt="{{ show.title }}" class="detail-image" />
+    </div>
+
+    <h1 class="detail-title">
+        {{ show.title }}
+    </h1>
+
+    <div class="detail-infos">
+        <div class="detail-info-line">
+            <strong>Lieu :</strong>
+            <span>{{ show.place }}</span>
+        </div>
+
+        <div class="detail-info-line" *ngIf="show.address">
+            <strong>Adresse :</strong>
+            <span>{{ show.address }}</span>
+        </div>
+
+        <div class="detail-info-line">
+            <strong>Date :</strong>
+            <span>{{ show.date }}</span>
+        </div>
+
+        <div class="detail-info-line">
+            <strong>Prix :</strong>
+            <span>
+        <ng-container *ngIf="show.priceMin; else noPrice">
+          À partir de {{ show.priceMin }}€
+        </ng-container>
+
+        <ng-template #noPrice>
+          — €
+        </ng-template>
+      </span>
+        </div>
+    </div>
+
+    <button class="reserve-button" (click)="reserve()">
+        Réserver
+    </button>
+
+</div>
+
+<div *ngIf="isLoading" class="loading">
+    Chargement...
+</div>
