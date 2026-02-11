@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HomepageService } from '../../services/homepage.service';
 import { CommonModule } from '@angular/common';
-import { Show } from '../../models/show';
+import { Spectacle } from '../../models/spectacle';
 
 @Component({
   selector: 'app-show-detail',
@@ -13,7 +13,7 @@ import { Show } from '../../models/show';
 })
 export class ShowDetailComponent implements OnInit {
 
-  show!: Show | null;
+  show!: Spectacle | null;
   isLoading = true;
 
   constructor(

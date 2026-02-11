@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Show } from '../../models/show';
+import { Spectacle } from '../../models/spectacle';
 import {RouterLink} from '@angular/router';
 
 @Component({
@@ -11,5 +11,5 @@ import {RouterLink} from '@angular/router';
   styleUrls: ['./show-card.component.scss']
 })
 export class ShowCardComponent {
-  @Input() show!: Show;
+  @Input() show!: Spectacle;
 }

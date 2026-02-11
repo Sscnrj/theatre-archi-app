@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HomepageService } from '../../services/homepage.service';
-import { Show } from '../../models/show';
+import { Spectacle } from '../../models/spectacle';
 import { ShowCardComponent } from '../show-card/show-card.component';
 
 @Component({
@@ -18,7 +18,7 @@ import { ShowCardComponent } from '../show-card/show-card.component';
 })
 export class HomepageComponent {
 
-  shows: Show[] = [];
+  shows: Spectacle[] = [];
   searchTerm = '';
   sortBy = 'date';
   isLoading = true;
@@ -39,7 +39,7 @@ export class HomepageComponent {
     });
   }
 
-  get filteredShows(): Show[] {
+  get filteredShows(): Spectacle[] {
     const term = this.searchTerm.toLowerCase();
     let result = this.shows.filter(s =>
         s.title.toLowerCase().includes(term)

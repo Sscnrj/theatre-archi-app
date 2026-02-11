@@ -11,11 +11,15 @@ import java.util.Optional;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    @EntityGraph(attributePaths = {"spectacle"})
-    List<Reservation> findByUserEmail(String email);
+  // 👤 Réservations de l'utilisateur connecté (JWT sub)
+  @EntityGraph(attributePaths = {"spectacle"})
+  List<Reservation> findByUserId(String userId);
 
-    @EntityGraph(attributePaths = {"spectacle"})
-    Optional<Reservation> findById(Long id);
+  // 🔍 Détail réservation avec spectacle chargé
+  @Override
+  @EntityGraph(attributePaths = {"spectacle"})
+  Optional<Reservation> findById(Long id);
 
-    Integer countAllBy();
+  // 📊 Statistique simple
+  Integer countAllBy();
 }
