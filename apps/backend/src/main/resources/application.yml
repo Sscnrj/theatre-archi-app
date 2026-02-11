@@ -29,6 +29,9 @@ spring:
         jwt:
           secret-key: your-super-secret-key-change-in-production
 
+server:
+  port: 8081
+
 # URLs des microservices (informationnelles en version rapide)
 payment:
   service:
