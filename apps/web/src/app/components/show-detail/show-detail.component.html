@@ -1,49 +1,37 @@
-<div class="detail-container" *ngIf="show">
+<section class="detail">
+  <p *ngIf="isLoading">Chargement...</p>
 
-    <div class="detail-image-wrapper">
-        <img [src]="show.imageUrl" alt="{{ show.title }}" class="detail-image" />
-    </div>
+  <p class="error" *ngIf="!isLoading && error">{{ error }}</p>
 
-    <h1 class="detail-title">
-        {{ show.title }}
-    </h1>
+  <ng-container *ngIf="!isLoading && !error && show">
+    <div class="header">
+      <img class="detail-image" [src]="imageSrc" [alt]="show.titre" />
 
-    <div class="detail-infos">
-        <div class="detail-info-line">
-            <strong>Lieu :</strong>
-            <span>{{ show.place }}</span>
-        </div>
+      <div class="header-content">
+        <h1>{{ show.titre }}</h1>
+        <p class="desc">{{ show.description }}</p>
 
-        <div class="detail-info-line" *ngIf="show.address">
-            <strong>Adresse :</strong>
-            <span>{{ show.address }}</span>
-        </div>
-
-        <div class="detail-info-line">
+        <div class="info">
+          <div class="line">
             <strong>Date :</strong>
-            <span>{{ show.date }}</span>
-        </div>
+            <span>{{ formatDate(show.date_spectacle) }}</span>
+          </div>
 
-        <div class="detail-info-line">
+          <div class="line">
             <strong>Prix :</strong>
-            <span>
-        <ng-container *ngIf="show.priceMin; else noPrice">
-          À partir de {{ show.priceMin }}€
-        </ng-container>
+            <span>{{ show.prix }} €</span>
+          </div>
 
-        <ng-template #noPrice>
-          — €
-        </ng-template>
-      </span>
+          <div class="line">
+            <strong>Places restantes :</strong>
+            <span>{{ show.nb_places_restantes }} / {{ show.nb_places_total }}</span>
+          </div>
         </div>
+
+        <button (click)="reserve()" [disabled]="show.nb_places_restantes <= 0">
+          Réserver
+        </button>
+      </div>
     </div>
-
-    <button class="reserve-button" (click)="reserve()">
-        Réserver
-    </button>
-
-</div>
-
-<div *ngIf="isLoading" class="loading">
-    Chargement...
-</div>
+  </ng-container>
+</section>

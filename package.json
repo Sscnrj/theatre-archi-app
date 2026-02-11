@@ -22,8 +22,14 @@
     "@angular/ssr": "~20.3.0",
     "empty": "0.10.1",
     "express": "^4.21.2",
+    "pg": "^8.18.0",
     "rxjs": "~7.8.0",
     "zone.js": "~0.15.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "ora": "5.4.1"
+    }
   },
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "~1.19.1",

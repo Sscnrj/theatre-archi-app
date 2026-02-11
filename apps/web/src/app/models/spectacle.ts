@@ -1,5 +1,5 @@
 export interface Spectacle {
-  id_spectacle: number;
+  id: number;
   titre: string;
   description: string;
   date_spectacle: string; // "YYYY-MM-DD" ou ISO

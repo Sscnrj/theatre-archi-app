@@ -1,55 +1,32 @@
-<div class="homepage">
+<section class="homepage">
+  <h1>Spectacles</h1>
 
-    <!-- SEARCH BAR -->
-    <section class="search">
-        <h2 class="search__title">Rechercher un événement</h2>
+  <div class="toolbar">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      placeholder="Rechercher par titre..."
+      aria-label="Rechercher"
+    />
 
-        <div class="search__bar-row">
-            <!-- Search by title -->
-            <div class="search__input-wrapper">
-                <label class="search__label">Rechercher par nom d’événement</label>
-                <div class="search__input-group">
-                    <input
-                            type="text"
-                            [(ngModel)]="searchTerm"
-                            placeholder="Rechercher..."
-                    />
-                    <span class="search__icon">🔍</span>
-                </div>
-            </div>
+    <select [(ngModel)]="sortBy" aria-label="Trier">
+      <option value="date">Trier par date</option>
+      <option value="titre">Trier par titre</option>
+      <option value="prix">Trier par prix</option>
+    </select>
+  </div>
 
-            <!-- Sort (not yet implemented but kept for UI design) -->
-            <div class="search__sort-wrapper">
-                <span class="search__sort-label">Trier par</span>
-                <div class="search__select-wrapper">
-                    <select [(ngModel)]="sortBy">
-                        <option value="date">Date</option>
-                        <option value="place">Lieu</option>
-                        <option value="title">Nom</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </section>
+  <p *ngIf="isLoading">Chargement...</p>
+  <p class="error" *ngIf="!isLoading && error">{{ error }}</p>
 
-    <!-- LOADING STATE -->
-    <div *ngIf="isLoading" class="loading">
-        Chargement des événements Ticketmaster...
-    </div>
+  <p *ngIf="!isLoading && !error && filteredShows.length === 0">
+    Aucun spectacle trouvé.
+  </p>
 
-    <!-- EMPTY STATE -->
-    <div *ngIf="!isLoading && filteredShows.length === 0" class="empty">
-        Aucun événement ne correspond à votre recherche.
-    </div>
-
-    <!-- SHOW LIST -->
-    <section *ngIf="!isLoading && filteredShows.length > 0" class="shows">
-        <div class="shows__list">
-            <app-show-card
-                    *ngFor="let show of filteredShows"
-                    [show]="show">
-            </app-show-card>
-        </div>
-    </section>
-
-</div>
+  <div class="grid" *ngIf="!isLoading && !error && filteredShows.length > 0">
+    <app-show-card
+      *ngFor="let s of filteredShows; trackBy: trackById"
+      [show]="s"
+    ></app-show-card>
+  </div>
+</section>

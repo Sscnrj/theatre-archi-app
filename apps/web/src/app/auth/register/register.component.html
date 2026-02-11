@@ -1,0 +1,37 @@
+<section class="auth-page">
+  <h2>Inscription</h2>
+
+  <div class="card">
+    <label>
+      Nom
+      <input type="text" [(ngModel)]="nom" placeholder="Nom" />
+    </label>
+
+    <label>
+      Prénom
+      <input type="text" [(ngModel)]="prenom" placeholder="Prénom" />
+    </label>
+
+    <label>
+      Email
+      <input type="email" [(ngModel)]="email" placeholder="Email" />
+    </label>
+
+    <label>
+      Mot de passe
+      <input type="password" [(ngModel)]="password" placeholder="Mot de passe" />
+    </label>
+
+    <p class="error" *ngIf="error">{{ error }}</p>
+    <p class="success" *ngIf="success">{{ success }}</p>
+
+    <button (click)="register()" [disabled]="isSubmitting">
+      {{ isSubmitting ? 'Création...' : 'Créer mon compte' }}
+    </button>
+
+    <p class="hint">
+      Déjà un compte ?
+      <a routerLink="/login">Se connecter</a>
+    </p>
+  </div>
+</section>

@@ -1,41 +1,24 @@
 <a class="show-card-link" [routerLink]="['/show', show.id]">
-    <div class="show-card">
-
-        <div class="show-card__image-wrapper">
-            <img [src]="show.imageUrl" [alt]="show.title" />
-        </div>
-
-        <div class="show-card__content">
-
-            <div class="show-card__title">
-                {{ show.title }}
-            </div>
-
-            <div class="show-card__location">
-                <ng-container *ngIf="show.address; else placeOnly">
-                    {{ show.address }}
-                </ng-container>
-                <ng-template #placeOnly>
-                    {{ show.place }}
-                </ng-template>
-            </div>
-
-            <div class="show-card__date">
-                {{ show.date }}
-            </div>
-
-            <!-- PRIX -->
-            <div class="show-card__price">
-                <ng-container *ngIf="show.priceMin; else noPrice">
-                    À partir de <strong>{{ show.priceMin }}€</strong>
-                </ng-container>
-
-                <ng-template #noPrice>
-                    — €
-                </ng-template>
-            </div>
-
-        </div>
-
+  <article class="show-card">
+    <div class="img">
+      <img [src]="imageSrc" [alt]="show.titre" />
     </div>
+
+    <div class="content">
+      <h3 class="title">{{ show.titre }}</h3>
+
+      <p class="line">
+        <strong>Date :</strong> {{ formatDate(show.date_spectacle) }}
+      </p>
+
+      <p class="line">
+        <strong>Prix :</strong> {{ show.prix }} €
+      </p>
+
+      <p class="line">
+        <strong>Places restantes :</strong>
+        {{ show.nb_places_restantes }} / {{ show.nb_places_total }}
+      </p>
+    </div>
+  </article>
 </a>
