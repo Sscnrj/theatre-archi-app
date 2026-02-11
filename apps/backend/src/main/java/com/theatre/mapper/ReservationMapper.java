@@ -8,6 +8,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import java.time.LocalDateTime;
+
 @Mapper(componentModel = "spring")
 public interface ReservationMapper {
 

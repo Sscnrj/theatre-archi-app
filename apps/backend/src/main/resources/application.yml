@@ -30,7 +30,7 @@ spring:
           secret-key: your-super-secret-key-change-in-production
 
 server:
-  port: 8081
+  port: 8080
 
 # URLs des microservices (informationnelles en version rapide)
 payment:

@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_PASSWORD: dev
       POSTGRES_USER: dev
-      POSTGRES_DB: app_db
+      POSTGRES_DB: theatre
     ports:
       - "5432:5432"
     volumes:

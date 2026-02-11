@@ -34,10 +34,11 @@ public class ReservationService {
       .orElseThrow(() -> new ResourceNotFoundException("Spectacle non trouvé avec l'ID : " + request.getSpectacleId()));
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String email = authentication.getName(); // Récupère l'email de l'utilisateur connecté
+    String userId = authentication.getName(); // Récupère l'identifiant de l'utilisateur connecté
 
     Reservation reservation = reservationMapper.toEntity(request, spectacle);
-    reservation.setUserEmail(email); // À adapter selon ton modèle User
+    reservation.setUserId(userId);
+    reservation.setUserEmail(userId); // À adapter selon ton modèle User
 
     Reservation savedReservation = reservationRepository.save(reservation);
     return reservationMapper.toDTO(savedReservation);
@@ -45,9 +46,9 @@ public class ReservationService {
 
   public List<ReservationDTO> consulterReservationsUtilisateur() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String email = authentication.getName();
+    String userId = authentication.getName();
 
-    List<Reservation> reservations = reservationRepository.findByUserEmail(email);
+    List<Reservation> reservations = reservationRepository.findByUserId(userId);
     return reservations.stream()
       .map(reservationMapper::toDTO)
       .collect(Collectors.toList());
@@ -58,9 +59,9 @@ public class ReservationService {
       .orElseThrow(() -> new ResourceNotFoundException("Réservation non trouvée avec l'ID : " + id));
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String email = authentication.getName();
+    String userId = authentication.getName();
 
-    if (!reservation.getUserEmail().equals(email)) {
+    if (!reservation.getUserId().equals(userId)) {
       throw new IllegalStateException("Vous ne pouvez pas annuler une réservation qui ne vous appartient pas.");
     }
 
