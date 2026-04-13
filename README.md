@@ -56,3 +56,22 @@ npm run dev:web:no-auth
   ```bash
   npm run test:payment
   ```
+
+## Migration et seed Liquibase (manuel)
+Le backend est configure pour une execution **manuelle** des migrations Liquibase.
+
+1. Demarrer PostgreSQL :
+   ```bash
+   npm run dev:db
+   ```
+2. Appliquer la structure + le seed fake :
+   ```bash
+   cd apps/backend
+   mvn clean resources:resources liquibase:update
+   ```
+
+Le seed injecte un jeu de donnees de test sur le schema backend actuel :
+- 12 fake spectacles (mix passe + futur)
+- 120 reservations
+- 30 utilisateurs simules via `userId`/`userEmail`
+- 240 billets simules via `nombrePlaces`

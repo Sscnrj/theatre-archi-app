@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: changesets/001-create-core-tables.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changesets/002-seed-fake-dataset.yaml
+      relativeToChangelogFile: true
