@@ -1,0 +1,45 @@
+<section class="register-card">
+  <h1>Inscription</h1>
+
+  <p *ngIf="!authEnabled" class="demo-note">
+    En mode demo, ce formulaire cree un compte local simulé.
+  </p>
+
+  <form [formGroup]="registerForm" (ngSubmit)="submit()">
+    <label>
+      Nom
+      <input type="text" formControlName="nom" />
+    </label>
+
+    <label>
+      Prenom
+      <input type="text" formControlName="prenom" />
+    </label>
+
+    <label>
+      Email
+      <input type="email" formControlName="email" />
+    </label>
+    <small *ngIf="registerForm.controls.email.invalid && registerForm.controls.email.touched">
+      Un email valide est requis.
+    </small>
+
+    <label>
+      Mot de passe
+      <input type="password" formControlName="password" />
+    </label>
+    <small *ngIf="registerForm.controls.password.invalid && registerForm.controls.password.touched">
+      Le mot de passe doit contenir au moins 6 caracteres.
+    </small>
+
+    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
+    <button type="submit" [disabled]="isSubmitting">
+      {{ isSubmitting ? 'Creation...' : 'Creer mon compte' }}
+    </button>
+  </form>
+
+  <p class="alt-action">
+    Deja inscrit ? <a routerLink="/login">Connexion</a>
+  </p>
+</section>

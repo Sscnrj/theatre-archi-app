@@ -3,4 +3,5 @@ export const environment = {
   springApi: 'http://localhost:8080/api',
   authApi: 'http://localhost:3001',
   paymentApi: 'http://localhost:3002',
-};
+  authEnabled: true,
+} as const;

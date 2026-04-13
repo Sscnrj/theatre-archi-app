@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/user/reservations")
+@RequestMapping("/api/reservations")
 @Tag(name = "Réservations", description = "Endpoints pour les réservations des utilisateurs")
-@PreAuthorize("hasRole('USER')")
+// @PreAuthorize("hasRole('USER')") // Temporairement désactivé
 public class ReservationController {
 
   @Autowired

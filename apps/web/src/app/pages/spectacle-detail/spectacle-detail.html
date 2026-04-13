@@ -1,0 +1,32 @@
+<section class="page">
+  <a routerLink="/spectacles" class="back-link">← Retour a la liste</a>
+
+  <p *ngIf="isLoading">Chargement...</p>
+  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
+  <article class="card" *ngIf="spectacle && !isLoading">
+    <img *ngIf="spectacle.imageUrl" [src]="spectacle.imageUrl" [alt]="spectacle.titre" />
+    <h1>{{ spectacle.titre }}</h1>
+    <p>{{ spectacle.description }}</p>
+    <p><strong>Date:</strong> {{ spectacle.dateSpectacle | date: 'medium' }}</p>
+    <p><strong>Prix:</strong> {{ spectacle.prix | currency: 'EUR' : 'symbol' : '1.2-2' }}</p>
+
+    <form [formGroup]="reservationForm" (ngSubmit)="reserve()">
+      <label>
+        Nombre de places
+        <input type="number" min="1" formControlName="nombrePlaces" />
+      </label>
+      <small
+        *ngIf="reservationForm.controls.nombrePlaces.invalid && reservationForm.controls.nombrePlaces.touched"
+      >
+        La quantite doit etre superieure a 0.
+      </small>
+
+      <button type="submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Reservation...' : 'Reserver' }}
+      </button>
+    </form>
+
+    <p *ngIf="successMessage" class="success">{{ successMessage }}</p>
+  </article>
+</section>

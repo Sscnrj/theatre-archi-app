@@ -1,0 +1,35 @@
+<section class="auth-card">
+  <h1>Connexion</h1>
+
+  <p *ngIf="!authEnabled" class="demo-note">
+    Le mode demo est actif. Tu peux continuer sans microservice d'authentification.
+  </p>
+
+  <form [formGroup]="loginForm" (ngSubmit)="submit()">
+    <label>
+      Email
+      <input type="email" formControlName="email" placeholder="toi@exemple.com" />
+    </label>
+    <small *ngIf="loginForm.controls.email.invalid && loginForm.controls.email.touched">
+      Un email valide est requis.
+    </small>
+
+    <label>
+      Mot de passe
+      <input type="password" formControlName="password" />
+    </label>
+    <small *ngIf="loginForm.controls.password.invalid && loginForm.controls.password.touched">
+      Le mot de passe est requis.
+    </small>
+
+    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
+    <button type="submit" [disabled]="isSubmitting">
+      {{ isSubmitting ? 'Connexion...' : authEnabled ? 'Se connecter' : 'Continuer en mode demo' }}
+    </button>
+  </form>
+
+  <p *ngIf="authEnabled" class="alt-action">
+    Pas encore de compte ? <a routerLink="/register">Inscription</a>
+  </p>
+</section>

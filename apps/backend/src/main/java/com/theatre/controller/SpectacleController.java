@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/user/spectacles")
+@RequestMapping("/api/spectacles")
 @Tag(name = "Spectacles", description = "Endpoints pour consulter les spectacles")
-@PreAuthorize("hasRole('USER')")
+// @PreAuthorize("hasRole('USER')") // Temporairement désactivé
 public class SpectacleController {
 
   @Autowired
