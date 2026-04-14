@@ -6,6 +6,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, '../..');
 const authSqlitePath = path.join(repoRoot, 'tests', 'fonc', '.tmp', 'auth.e2e.sqlite');
+const backendStartupCommand =
+  process.env.CI === 'true'
+    ? 'cd apps/backend && mvn -B resources:resources liquibase:update && mvn spring-boot:run'
+    : 'docker compose -f infra/docker-compose.yml up -d db && until docker exec theatre-db pg_isready -U dev -d theatre >/dev/null 2>&1; do sleep 2; done && cd apps/backend && mvn resources:resources liquibase:update && mvn spring-boot:run';
 
 export default defineConfig({
   testDir: './tests/specs',
@@ -25,8 +29,7 @@ export default defineConfig({
   },
   webServer: [
     {
-      command:
-        'docker compose -f infra/docker-compose.yml up -d db && until docker exec theatre-db pg_isready -U dev -d theatre >/dev/null 2>&1; do sleep 2; done && cd apps/backend && mvn resources:resources liquibase:update && mvn spring-boot:run',
+      command: backendStartupCommand,
       cwd: repoRoot,
       url: 'http://localhost:8080/api/spectacles',
       timeout: 300_000,
