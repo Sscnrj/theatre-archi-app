@@ -53,7 +53,7 @@ jobs:
         run: cd tests/fonc && npx playwright install --with-deps chromium
 
       - name: Run functional tests
-        run: npm run test:fonc
+        run: DEBUG=pw:webserver npm run test:fonc
 
       - name: Upload Playwright report
         if: always()

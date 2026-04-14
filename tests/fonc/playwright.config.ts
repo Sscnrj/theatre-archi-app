@@ -26,7 +26,7 @@ export default defineConfig({
   webServer: [
     {
       command:
-        'docker compose -f infra/docker-compose.yml up -d db && cd apps/backend && mvn -q resources:resources liquibase:update && mvn spring-boot:run',
+        'docker compose -f infra/docker-compose.yml up -d db && until docker exec theatre-db pg_isready -U dev -d theatre >/dev/null 2>&1; do sleep 2; done && cd apps/backend && mvn resources:resources liquibase:update && mvn spring-boot:run',
       cwd: repoRoot,
       url: 'http://localhost:8080/api/spectacles',
       timeout: 300_000,

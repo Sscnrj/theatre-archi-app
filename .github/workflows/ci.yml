@@ -65,7 +65,7 @@ jobs:
         run: npm ci --prefix services/payment-service
 
       - name: Apply backend Liquibase migrations
-        run: cd apps/backend && mvn -q resources:resources liquibase:update
+        run: cd apps/backend && mvn -B resources:resources liquibase:update
 
       - name: Run backend tests
         run: npm run test:back

@@ -3,5 +3,8 @@ databaseChangeLog:
       file: changesets/001-create-core-tables.yaml
       relativeToChangelogFile: true
   - include:
+      file: changesets/003-create-auth-user-tables.yaml
+      relativeToChangelogFile: true
+  - include:
       file: changesets/002-seed-fake-dataset.yaml
       relativeToChangelogFile: true
