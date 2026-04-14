@@ -4,7 +4,7 @@
   <p *ngIf="isLoading">Chargement...</p>
   <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
 
-  <article class="card" *ngIf="spectacle && !isLoading">
+  <article class="card" *ngIf="spectacle && !isLoading" data-testid="spectacle-detail">
     <img *ngIf="spectacle.imageUrl" [src]="spectacle.imageUrl" [alt]="spectacle.titre" />
     <h1>{{ spectacle.titre }}</h1>
     <p>{{ spectacle.description }}</p>
@@ -14,7 +14,12 @@
     <form [formGroup]="reservationForm" (ngSubmit)="reserve()">
       <label>
         Nombre de places
-        <input type="number" min="1" formControlName="nombrePlaces" />
+        <input
+          type="number"
+          min="1"
+          formControlName="nombrePlaces"
+          data-testid="reservation-nombre-places"
+        />
       </label>
       <small
         *ngIf="reservationForm.controls.nombrePlaces.invalid && reservationForm.controls.nombrePlaces.touched"
@@ -22,11 +27,11 @@
         La quantite doit etre superieure a 0.
       </small>
 
-      <button type="submit" [disabled]="isSubmitting">
+      <button type="submit" [disabled]="isSubmitting" data-testid="reservation-submit">
         {{ isSubmitting ? 'Reservation...' : 'Reserver' }}
       </button>
     </form>
 
-    <p *ngIf="successMessage" class="success">{{ successMessage }}</p>
+    <p *ngIf="successMessage" class="success" data-testid="reservation-success">{{ successMessage }}</p>
   </article>
 </section>

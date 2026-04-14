@@ -44,6 +44,11 @@ npm run dev:web:no-auth
   ```bash
   npm run test:web
   ```
+- Frontend (fonctionnel Playwright) :
+  ```bash
+  npm run install:browsers --prefix tests/fonc
+  npm run test:fonc
+  ```
 - Backend Spring :
   ```bash
   npm run test:back
@@ -56,6 +61,15 @@ npm run dev:web:no-auth
   ```bash
   npm run test:payment
   ```
+
+### Notes sur les tests fonctionnels (`tests/fonc`)
+- Les E2E démarrent automatiquement :
+  - la DB (`docker compose ... up -d db`)
+  - la migration/seed Liquibase backend
+  - le backend Spring
+  - l'auth-service (SQLite local + `JWT_SECRET` injecté)
+  - le front Angular
+- Les scénarios créent un utilisateur unique à chaque exécution pour éviter les collisions de données.
 
 ## Migration et seed Liquibase (manuel)
 Le backend est configure pour une execution **manuelle** des migrations Liquibase.

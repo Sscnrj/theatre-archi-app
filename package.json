@@ -12,6 +12,8 @@
     "dev:payment": "npm run start:dev --prefix services/payment-service",
     "build:web": "npm run build --prefix apps/web",
     "test:web": "npm run test:ci --prefix apps/web",
+    "test:fonc": "npm run test --prefix tests/fonc",
+    "test:fonc:headed": "npm run test:headed --prefix tests/fonc",
     "test:back": "cd apps/backend && mvn test",
     "test:auth": "npm test --prefix services/auth-service -- --runInBand",
     "test:payment": "npm test --prefix services/payment-service -- --runInBand"

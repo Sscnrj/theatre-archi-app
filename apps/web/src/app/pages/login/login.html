@@ -8,7 +8,12 @@
   <form [formGroup]="loginForm" (ngSubmit)="submit()">
     <label>
       Email
-      <input type="email" formControlName="email" placeholder="toi@exemple.com" />
+      <input
+        type="email"
+        formControlName="email"
+        placeholder="toi@exemple.com"
+        data-testid="login-email"
+      />
     </label>
     <small *ngIf="loginForm.controls.email.invalid && loginForm.controls.email.touched">
       Un email valide est requis.
@@ -16,15 +21,15 @@
 
     <label>
       Mot de passe
-      <input type="password" formControlName="password" />
+      <input type="password" formControlName="password" data-testid="login-password" />
     </label>
     <small *ngIf="loginForm.controls.password.invalid && loginForm.controls.password.touched">
       Le mot de passe est requis.
     </small>
 
-    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+    <p *ngIf="errorMessage" class="error" data-testid="login-error">{{ errorMessage }}</p>
 
-    <button type="submit" [disabled]="isSubmitting">
+    <button type="submit" [disabled]="isSubmitting" data-testid="login-submit">
       {{ isSubmitting ? 'Connexion...' : authEnabled ? 'Se connecter' : 'Continuer en mode demo' }}
     </button>
   </form>

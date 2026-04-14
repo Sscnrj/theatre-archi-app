@@ -8,17 +8,17 @@
   <form [formGroup]="registerForm" (ngSubmit)="submit()">
     <label>
       Nom
-      <input type="text" formControlName="nom" />
+      <input type="text" formControlName="nom" data-testid="register-nom" />
     </label>
 
     <label>
       Prenom
-      <input type="text" formControlName="prenom" />
+      <input type="text" formControlName="prenom" data-testid="register-prenom" />
     </label>
 
     <label>
       Email
-      <input type="email" formControlName="email" />
+      <input type="email" formControlName="email" data-testid="register-email" />
     </label>
     <small *ngIf="registerForm.controls.email.invalid && registerForm.controls.email.touched">
       Un email valide est requis.
@@ -26,7 +26,7 @@
 
     <label>
       Mot de passe
-      <input type="password" formControlName="password" />
+      <input type="password" formControlName="password" data-testid="register-password" />
     </label>
     <small *ngIf="registerForm.controls.password.invalid && registerForm.controls.password.touched">
       Le mot de passe doit contenir au moins 6 caracteres.
@@ -34,7 +34,7 @@
 
     <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
 
-    <button type="submit" [disabled]="isSubmitting">
+    <button type="submit" [disabled]="isSubmitting" data-testid="register-submit">
       {{ isSubmitting ? 'Creation...' : 'Creer mon compte' }}
     </button>
   </form>

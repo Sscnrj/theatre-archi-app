@@ -10,13 +10,13 @@
     <span *ngIf="!authEnabled" class="mode-badge">Mode demo (auth desactivee)</span>
 
     <ng-container *ngIf="session() as currentSession; else loggedOut">
-      <span class="user-email">{{ currentSession.user.email }}</span>
-      <button type="button" class="logout" (click)="logout()">Se deconnecter</button>
+      <span class="user-email" data-testid="session-user-email">{{ currentSession.user.email }}</span>
+      <button type="button" class="logout" (click)="logout()" data-testid="logout-button">Se deconnecter</button>
     </ng-container>
 
     <ng-template #loggedOut>
-      <a *ngIf="authEnabled" routerLink="/login" class="auth-link">Connexion</a>
-      <a *ngIf="authEnabled" routerLink="/register" class="auth-link">Inscription</a>
+      <a *ngIf="authEnabled" routerLink="/login" class="auth-link" data-testid="header-login-link">Connexion</a>
+      <a *ngIf="authEnabled" routerLink="/register" class="auth-link" data-testid="header-register-link">Inscription</a>
     </ng-template>
   </div>
 </header>
