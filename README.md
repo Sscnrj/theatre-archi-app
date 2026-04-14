@@ -1,76 +1,91 @@
 # TheatreArchiApp
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+Application de gestion de theatre composee de :
+- `apps/backend` : API Spring Boot (spectacles, reservations, admin).
+- `apps/web` : frontend Angular (refait a neuf, sans Nx).
+- `services/auth-service` : microservice NestJS d'authentification.
+- `services/payment-service` : microservice NestJS de paiement.
+- `infra` : Docker Compose pour PostgreSQL.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+## Prerequis
+- Node.js 20+
+- Java 21+
+- Maven 3.9+
+- Docker (pour la base locale)
 
-Run `npx nx graph` to visually explore what got created. Now, let's get you up to speed!
+## Demarrage local
+Depuis la racine du repo :
 
-## Finish your CI setup
+1. Base de donnees :
+   ```bash
+   npm run dev:db
+   ```
+2. Backend Spring :
+   ```bash
+   npm run dev:back
+   ```
+3. Microservice auth (optionnel si front en mode demo) :
+   ```bash
+   npm run dev:auth
+   ```
+4. Frontend Angular :
+   ```bash
+   npm run dev:web
+   ```
 
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/IJkaMVv1ug)
-
-
-## Run tasks
-
-To run tasks with Nx use:
-
-```sh
-npx nx <target> <project-name>
+### Frontend sans microservice auth
+Pour lancer le front en mode demo (bypass auth + session locale simulee) :
+```bash
+npm run dev:web:no-auth
 ```
 
-For example:
+## Tests
+- Frontend (integration Angular) :
+  ```bash
+  npm run test:web
+  ```
+- Frontend (fonctionnel Playwright) :
+  ```bash
+  npm run install:browsers --prefix tests/fonc
+  npm run test:fonc
+  ```
+- Backend Spring :
+  ```bash
+  npm run test:back
+  ```
+- Auth-service :
+  ```bash
+  npm run test:auth
+  ```
+- Payment-service :
+  ```bash
+  npm run test:payment
+  ```
 
-```sh
-npx nx build myproject
-```
+### Notes sur les tests fonctionnels (`tests/fonc`)
+- Les E2E démarrent automatiquement :
+  - la DB (`docker compose ... up -d db`)
+  - la migration/seed Liquibase backend
+  - le backend Spring
+  - l'auth-service (SQLite local + `JWT_SECRET` injecté)
+  - le front Angular
+- Les scénarios créent un utilisateur unique à chaque exécution pour éviter les collisions de données.
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+## Migration et seed Liquibase (manuel)
+Le backend est configure pour une execution **manuelle** des migrations Liquibase.
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+1. Demarrer PostgreSQL :
+   ```bash
+   npm run dev:db
+   ```
+2. Appliquer la structure + le seed fake :
+   ```bash
+   cd apps/backend
+   mvn clean resources:resources liquibase:update
+   ```
 
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-To install a new plugin you can use the `nx add` command. Here's an example of adding the React plugin:
-```sh
-npx nx add @nx/react
-```
-
-Use the plugin's generator to create new projects. For example, to create a new React app or library:
-
-```sh
-# Generate an app
-npx nx g @nx/react:app demo
-
-# Generate a library
-npx nx g @nx/react:lib some-lib
-```
-
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
-
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+Le seed injecte un jeu de donnees de test sur le schema backend actuel :
+- 12 fake spectacles (mix passe + futur)
+- 120 reservations
+- 30 utilisateurs simules via `userId`/`userEmail`
+- 240 billets simules via `nombrePlaces`

@@ -1,0 +1,22 @@
+<section class="page">
+  <h1>Spectacles disponibles</h1>
+
+  <p *ngIf="isLoading">Chargement...</p>
+  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
+  <div class="grid" *ngIf="!isLoading && !errorMessage">
+    <article class="card" *ngFor="let spectacle of spectacles; trackBy: trackById" data-testid="spectacle-card">
+      <img
+        *ngIf="spectacle.imageUrl"
+        [src]="spectacle.imageUrl"
+        [alt]="spectacle.titre"
+        loading="lazy"
+      />
+      <h2 data-testid="spectacle-title">{{ spectacle.titre }}</h2>
+      <p>{{ spectacle.description }}</p>
+      <p><strong>Date:</strong> {{ spectacle.dateSpectacle | date: 'medium' }}</p>
+      <p><strong>Prix:</strong> {{ spectacle.prix | currency: 'EUR' : 'symbol' : '1.2-2' }}</p>
+      <a [routerLink]="['/spectacles', spectacle.id]" data-testid="spectacle-detail-link">Voir le detail</a>
+    </article>
+  </div>
+</section>

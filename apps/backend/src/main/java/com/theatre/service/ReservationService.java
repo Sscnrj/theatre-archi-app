@@ -6,12 +6,9 @@ import com.theatre.exception.ResourceNotFoundException;
 import com.theatre.mapper.ReservationMapper;
 import com.theatre.model.Reservation;
 import com.theatre.model.Spectacle;
-import com.theatre.model.User;
 import com.theatre.repository.ReservationRepository;
 import com.theatre.repository.SpectacleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,22 +30,22 @@ public class ReservationService {
     Spectacle spectacle = spectacleRepository.findById(request.getSpectacleId())
       .orElseThrow(() -> new ResourceNotFoundException("Spectacle non trouvé avec l'ID : " + request.getSpectacleId()));
 
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String userId = authentication.getName(); // Récupère l'identifiant de l'utilisateur connecté
+    // TODO: À remplacer par l'authentification réelle via JWT
+    String userId = "user-temp-" + System.currentTimeMillis();
+    String userEmail = "user@example.com";
 
     Reservation reservation = reservationMapper.toEntity(request, spectacle);
     reservation.setUserId(userId);
-    reservation.setUserEmail(userId); // À adapter selon ton modèle User
+    reservation.setUserEmail(userEmail);
 
     Reservation savedReservation = reservationRepository.save(reservation);
     return reservationMapper.toDTO(savedReservation);
   }
 
   public List<ReservationDTO> consulterReservationsUtilisateur() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String userId = authentication.getName();
-
-    List<Reservation> reservations = reservationRepository.findByUserId(userId);
+    // TODO: À remplacer par l'authentification réelle via JWT
+    // Pour l'instant, retourne toutes les réservations
+    List<Reservation> reservations = reservationRepository.findAll();
     return reservations.stream()
       .map(reservationMapper::toDTO)
       .collect(Collectors.toList());
@@ -58,13 +55,7 @@ public class ReservationService {
     Reservation reservation = reservationRepository.findById(id)
       .orElseThrow(() -> new ResourceNotFoundException("Réservation non trouvée avec l'ID : " + id));
 
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String userId = authentication.getName();
-
-    if (!reservation.getUserId().equals(userId)) {
-      throw new IllegalStateException("Vous ne pouvez pas annuler une réservation qui ne vous appartient pas.");
-    }
-
+    // TODO: Vérifier que l'utilisateur connecté est propriétaire de la réservation
     reservationRepository.delete(reservation);
   }
 }

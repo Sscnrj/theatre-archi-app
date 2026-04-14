@@ -1,0 +1,27 @@
+<section class="page">
+  <h1>Mes reservations</h1>
+
+  <p *ngIf="isLoading">Chargement...</p>
+  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+  <p *ngIf="!isLoading && reservations.length === 0" data-testid="reservation-empty">Aucune reservation pour le moment.</p>
+
+  <div class="list" *ngIf="!isLoading && reservations.length > 0">
+    <article class="item" *ngFor="let reservation of reservations; trackBy: trackById" data-testid="reservation-item">
+      <h2 data-testid="reservation-title">{{ reservation.titreSpectacle }}</h2>
+      <p><strong>Date reservation:</strong> {{ reservation.dateReservation | date: 'medium' }}</p>
+      <p><strong>Places:</strong> {{ reservation.nombrePlaces }}</p>
+      <p>
+        <strong>Montant:</strong>
+        {{ reservation.montantTotal | currency: 'EUR' : 'symbol' : '1.2-2' }}
+      </p>
+      <button
+        type="button"
+        (click)="cancel(reservation.id)"
+        [disabled]="cancelingId === reservation.id"
+        data-testid="reservation-cancel"
+      >
+        {{ cancelingId === reservation.id ? 'Annulation...' : 'Annuler' }}
+      </button>
+    </article>
+  </div>
+</section>

@@ -1,0 +1,81 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-seed-fake-spectacles
+      author: copilot
+      preConditions:
+        onFail: MARK_RAN
+        sqlCheck:
+          expectedResult: "0"
+          sql: "SELECT COUNT(*) FROM spectacles WHERE titre LIKE '[FAKE] %';"
+      changes:
+        - sql:
+            splitStatements: true
+            stripComments: true
+            sql: |
+              INSERT INTO spectacles (titre, description, date_spectacle, prix, image_url)
+              VALUES
+                ('[FAKE] Roméo et Juliette', 'Tragédie romantique classique revisitée.', '2025-01-12 20:00:00', 34.90, 'https://images.unsplash.com/photo-1503095396549-807759245b35?w=800'),
+                ('[FAKE] Le Cid', 'Drame héroïque autour de l''honneur et du devoir.', '2025-02-19 19:30:00', 28.00, 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=800'),
+                ('[FAKE] Dom Juan', 'Comédie dramatique sur la séduction et la morale.', '2025-03-08 20:15:00', 31.50, 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800'),
+                ('[FAKE] Hamlet', 'Tragédie politique et familiale de Shakespeare.', '2025-04-25 20:45:00', 36.00, 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=800'),
+                ('[FAKE] Carmen', 'Opéra passionnel entre liberté et jalousie.', '2025-06-05 20:00:00', 52.00, 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=800'),
+                ('[FAKE] Casse-Noisette', 'Ballet familial dans un univers féérique.', '2025-11-30 18:00:00', 39.90, 'https://images.unsplash.com/photo-1508807526345-15e9b5f4eaff?w=800'),
+                ('[FAKE] Cyrano de Bergerac', 'Panache, amour et sacrifice sur scène.', '2026-05-10 20:00:00', 33.00, 'https://images.unsplash.com/photo-1460723237483-7a6dc9d0b212?w=800'),
+                ('[FAKE] Le Lac des Cygnes', 'Grand ballet classique de Tchaïkovski.', '2026-06-14 19:30:00', 47.50, 'https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=800'),
+                ('[FAKE] Les Misérables', 'Comédie musicale épique inspirée de Victor Hugo.', '2026-07-02 20:00:00', 44.00, 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800'),
+                ('[FAKE] Phèdre', 'Tragédie racinienne autour de la passion interdite.', '2026-09-18 20:30:00', 29.90, 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800'),
+                ('[FAKE] L''Avare', 'Comédie mordante sur l''obsession de l''argent.', '2026-10-21 19:45:00', 27.90, 'https://images.unsplash.com/photo-1502136969935-8d11193c0a7e?w=800'),
+                ('[FAKE] Antigone', 'Drame antique entre loi de l''État et loi morale.', '2027-01-15 20:15:00', 30.00, 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=800');
+
+  - changeSet:
+      id: 004-seed-fake-reservations
+      author: copilot
+      preConditions:
+        onFail: MARK_RAN
+        and:
+          - sqlCheck:
+              expectedResult: "12"
+              sql: "SELECT COUNT(*) FROM spectacles WHERE titre LIKE '[FAKE] %';"
+          - sqlCheck:
+              expectedResult: "0"
+              sql: "SELECT COUNT(*) FROM reservations WHERE user_id LIKE 'fake-user-%';"
+      changes:
+        - sql:
+            splitStatements: false
+            stripComments: true
+            sql: |
+              WITH fake_spectacles AS (
+                SELECT id, prix, ROW_NUMBER() OVER (ORDER BY id) AS rn
+                FROM spectacles
+                WHERE titre LIKE '[FAKE] %'
+                ORDER BY id
+                LIMIT 12
+              ),
+              generated AS (
+                SELECT
+                  gs AS seq,
+                  ((gs - 1) % 30) + 1 AS user_seq,
+                  ((gs - 1) % 12) + 1 AS spectacle_seq,
+                  CASE WHEN gs % 3 = 0 THEN 'PAID' ELSE 'CREATED' END AS status
+                FROM generate_series(1, 120) gs
+              )
+              INSERT INTO reservations (
+                spectacle_id,
+                user_id,
+                user_email,
+                nombre_places,
+                montant_total,
+                date_reservation,
+                status
+              )
+              SELECT
+                fs.id,
+                format('fake-user-%s', LPAD(g.user_seq::text, 3, '0')),
+                format('fake.user.%s@example.test', LPAD(g.user_seq::text, 3, '0')),
+                2,
+                ROUND((fs.prix * 2)::numeric, 2)::double precision,
+                NOW() - ((g.seq % 180) || ' days')::interval,
+                g.status
+              FROM generated g
+              JOIN fake_spectacles fs
+                ON fs.rn = g.spectacle_seq;

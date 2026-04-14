@@ -10,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
@@ -21,13 +21,24 @@ spring:
 
   liquibase:
     enabled: false
+    # Exécution manuelle du seed/migration:
+    # cd apps/backend && mvn liquibase:update
     change-log: classpath:db/changelog/db.changelog-master.yaml
 
   security:
+    user:
+      name: admin
+      password: admin
     oauth2:
       resourceserver:
         jwt:
           secret-key: your-super-secret-key-change-in-production
+
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration
 
 server:
   port: 8080

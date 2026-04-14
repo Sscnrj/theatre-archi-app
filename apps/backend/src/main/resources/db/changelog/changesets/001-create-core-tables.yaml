@@ -1,0 +1,134 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-spectacles-table
+      author: copilot
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: spectacles
+      changes:
+        - createTable:
+            tableName: spectacles
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: titre
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_spectacle
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: prix
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: image_url
+                  type: VARCHAR(1024)
+        - createIndex:
+            tableName: spectacles
+            indexName: idx_spectacles_date_spectacle
+            columns:
+              - column:
+                  name: date_spectacle
+
+  - changeSet:
+      id: 002-create-reservations-table
+      author: copilot
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: reservations
+      changes:
+        - createTable:
+            tableName: reservations
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: spectacle_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: nombre_places
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: montant_total
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_reservation
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(32)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: reservations
+            baseColumnNames: spectacle_id
+            referencedTableName: spectacles
+            referencedColumnNames: id
+            constraintName: fk_reservations_spectacles
+            onDelete: CASCADE
+        - sql:
+            splitStatements: true
+            stripComments: true
+            sql: |
+              ALTER TABLE reservations
+                ADD CONSTRAINT chk_reservations_status
+                CHECK (status IN ('CREATED', 'PAID'));
+
+              ALTER TABLE reservations
+                ADD CONSTRAINT chk_reservations_nombre_places
+                CHECK (nombre_places > 0);
+        - createIndex:
+            tableName: reservations
+            indexName: idx_reservations_user_id
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            tableName: reservations
+            indexName: idx_reservations_spectacle_id
+            columns:
+              - column:
+                  name: spectacle_id
