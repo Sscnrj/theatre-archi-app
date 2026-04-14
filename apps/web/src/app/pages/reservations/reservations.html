@@ -1,16 +1,24 @@
-<section class="page">
-  <h1>Mes reservations</h1>
+<section class="page" data-testid="reservations-page">
+  <h1 data-testid="reservations-title">Mes reservations</h1>
 
-  <p *ngIf="isLoading">Chargement...</p>
-  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+  <p *ngIf="isLoading" data-testid="reservations-loading">Chargement...</p>
+  <p *ngIf="errorMessage" class="error" data-testid="reservations-error">{{ errorMessage }}</p>
   <p *ngIf="!isLoading && reservations.length === 0" data-testid="reservation-empty">Aucune reservation pour le moment.</p>
 
-  <div class="list" *ngIf="!isLoading && reservations.length > 0">
-    <article class="item" *ngFor="let reservation of reservations; trackBy: trackById" data-testid="reservation-item">
+  <div class="list" *ngIf="!isLoading && reservations.length > 0" data-testid="reservations-list">
+    <article
+      class="item"
+      *ngFor="let reservation of reservations; trackBy: trackById"
+      [attr.data-testid]="'reservation-item,id=' + reservation.id"
+    >
       <h2 data-testid="reservation-title">{{ reservation.titreSpectacle }}</h2>
-      <p><strong>Date reservation:</strong> {{ reservation.dateReservation | date: 'medium' }}</p>
-      <p><strong>Places:</strong> {{ reservation.nombrePlaces }}</p>
-      <p>
+      <p [attr.data-testid]="'reservation-date,id=' + reservation.id">
+        <strong>Date reservation:</strong> {{ reservation.dateReservation | date: 'medium' }}
+      </p>
+      <p [attr.data-testid]="'reservation-places,id=' + reservation.id">
+        <strong>Places:</strong> {{ reservation.nombrePlaces }}
+      </p>
+      <p [attr.data-testid]="'reservation-amount,id=' + reservation.id">
         <strong>Montant:</strong>
         {{ reservation.montantTotal | currency: 'EUR' : 'symbol' : '1.2-2' }}
       </p>
@@ -18,7 +26,7 @@
         type="button"
         (click)="cancel(reservation.id)"
         [disabled]="cancelingId === reservation.id"
-        data-testid="reservation-cancel"
+        [attr.data-testid]="'reservation-cancel,id=' + reservation.id"
       >
         {{ cancelingId === reservation.id ? 'Annulation...' : 'Annuler' }}
       </button>

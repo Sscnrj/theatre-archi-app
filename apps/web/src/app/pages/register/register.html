@@ -1,11 +1,11 @@
-<section class="register-card">
-  <h1>Inscription</h1>
+<section class="register-card" data-testid="register-page">
+  <h1 data-testid="register-title">Inscription</h1>
 
-  <p *ngIf="!authEnabled" class="demo-note">
+  <p *ngIf="!authEnabled" class="demo-note" data-testid="register-demo-note">
     En mode demo, ce formulaire cree un compte local simulé.
   </p>
 
-  <form [formGroup]="registerForm" (ngSubmit)="submit()">
+  <form [formGroup]="registerForm" (ngSubmit)="submit()" data-testid="register-form">
     <label>
       Nom
       <input type="text" formControlName="nom" data-testid="register-nom" />
@@ -20,7 +20,10 @@
       Email
       <input type="email" formControlName="email" data-testid="register-email" />
     </label>
-    <small *ngIf="registerForm.controls.email.invalid && registerForm.controls.email.touched">
+    <small
+      *ngIf="registerForm.controls.email.invalid && registerForm.controls.email.touched"
+      data-testid="register-email-error"
+    >
       Un email valide est requis.
     </small>
 
@@ -28,18 +31,21 @@
       Mot de passe
       <input type="password" formControlName="password" data-testid="register-password" />
     </label>
-    <small *ngIf="registerForm.controls.password.invalid && registerForm.controls.password.touched">
+    <small
+      *ngIf="registerForm.controls.password.invalid && registerForm.controls.password.touched"
+      data-testid="register-password-error"
+    >
       Le mot de passe doit contenir au moins 6 caracteres.
     </small>
 
-    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+    <p *ngIf="errorMessage" class="error" data-testid="register-error">{{ errorMessage }}</p>
 
     <button type="submit" [disabled]="isSubmitting" data-testid="register-submit">
       {{ isSubmitting ? 'Creation...' : 'Creer mon compte' }}
     </button>
   </form>
 
-  <p class="alt-action">
-    Deja inscrit ? <a routerLink="/login">Connexion</a>
+  <p class="alt-action" data-testid="register-alt-action">
+    Deja inscrit ? <a routerLink="/login" data-testid="register-login-link">Connexion</a>
   </p>
 </section>

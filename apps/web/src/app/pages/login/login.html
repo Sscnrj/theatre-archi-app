@@ -1,11 +1,11 @@
-<section class="auth-card">
-  <h1>Connexion</h1>
+<section class="auth-card" data-testid="login-page">
+  <h1 data-testid="login-title">Connexion</h1>
 
-  <p *ngIf="!authEnabled" class="demo-note">
+  <p *ngIf="!authEnabled" class="demo-note" data-testid="login-demo-note">
     Le mode demo est actif. Tu peux continuer sans microservice d'authentification.
   </p>
 
-  <form [formGroup]="loginForm" (ngSubmit)="submit()">
+  <form [formGroup]="loginForm" (ngSubmit)="submit()" data-testid="login-form">
     <label>
       Email
       <input
@@ -15,7 +15,10 @@
         data-testid="login-email"
       />
     </label>
-    <small *ngIf="loginForm.controls.email.invalid && loginForm.controls.email.touched">
+    <small
+      *ngIf="loginForm.controls.email.invalid && loginForm.controls.email.touched"
+      data-testid="login-email-error"
+    >
       Un email valide est requis.
     </small>
 
@@ -23,7 +26,10 @@
       Mot de passe
       <input type="password" formControlName="password" data-testid="login-password" />
     </label>
-    <small *ngIf="loginForm.controls.password.invalid && loginForm.controls.password.touched">
+    <small
+      *ngIf="loginForm.controls.password.invalid && loginForm.controls.password.touched"
+      data-testid="login-password-error"
+    >
       Le mot de passe est requis.
     </small>
 
@@ -34,7 +40,7 @@
     </button>
   </form>
 
-  <p *ngIf="authEnabled" class="alt-action">
-    Pas encore de compte ? <a routerLink="/register">Inscription</a>
+  <p *ngIf="authEnabled" class="alt-action" data-testid="login-alt-action">
+    Pas encore de compte ? <a routerLink="/register" data-testid="login-register-link">Inscription</a>
   </p>
 </section>

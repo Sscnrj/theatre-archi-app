@@ -1,25 +1,43 @@
-import { expect, test } from '@playwright/test';
-import { createUniqueUser, loginThroughUi, registerThroughUi } from '../helpers/auth.helper';
-import { createReservationFromFirstSpectacle } from '../helpers/booking.helper';
+import { BaseTest, test } from '../fixtures/base-test';
+import type { AppFixtures } from '../fixtures/base-test';
 
-test.describe('Parcours réservation', () => {
-  test('réserve un spectacle et le retrouve dans Mes réservations', async ({ page }) => {
-    const user = createUniqueUser();
-    await registerThroughUi(page, user);
-    await loginThroughUi(page, user);
+type ReservationScenarioFixtures = Pick<
+  AppFixtures,
+  'user' | 'authFeature' | 'navigationFeature' | 'spectaclesFeature' | 'reservationFeature'
+>;
 
-    const reservation = await createReservationFromFirstSpectacle(page, 7);
+class ReservationFlowTest extends BaseTest<ReservationScenarioFixtures> {
+  async reserveAndFindIt(nombrePlaces: number): Promise<void> {
+    this.annotate('Reservation', 'Reserve and list');
 
-    await page.goto('/reservations');
-    const targetedReservation = page
-      .getByTestId('reservation-item')
-      .filter({ hasText: reservation.spectacleTitle })
-      .filter({ hasText: `Places: ${reservation.nombrePlaces}` })
-      .first();
+    await this.fixtures.authFeature.register(this.fixtures.user);
+    await this.fixtures.authFeature.login(this.fixtures.user);
 
-    await expect(targetedReservation).toBeVisible();
-    await expect(targetedReservation.getByTestId('reservation-title')).toContainText(
-      reservation.spectacleTitle,
+    const spectacle = await this.fixtures.spectaclesFeature.openFirstSpectacleDetail();
+    const reservation = await this.fixtures.reservationFeature.reserve(nombrePlaces);
+
+    await this.fixtures.navigationFeature.gotoReservations();
+    await this.fixtures.reservationFeature.expectReservationVisible(
+      reservation.reservationId,
+      spectacle.spectacleTitle,
+      reservation.nombrePlaces,
     );
-  });
+  }
+}
+
+test.describe('Parcours reservation', () => {
+  test(
+    'reserve un spectacle et le retrouve dans Mes reservations',
+    { tag: ['@reservation', '@smoke'] },
+    async (
+      { user, authFeature, navigationFeature, spectaclesFeature, reservationFeature },
+      testInfo,
+    ) => {
+      const scenario = new ReservationFlowTest(
+        { user, authFeature, navigationFeature, spectaclesFeature, reservationFeature },
+        testInfo,
+      );
+      await scenario.reserveAndFindIt(7);
+    },
+  );
 });
