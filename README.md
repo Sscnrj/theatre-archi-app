@@ -70,6 +70,12 @@ npm run dev:web:no-auth
   - l'auth-service (SQLite local + `JWT_SECRET` injecté)
   - le front Angular
 - Les scénarios créent un utilisateur unique à chaque exécution pour éviter les collisions de données.
+- Architecture des tests Playwright :
+  - `tests/fonc/tests/core/test-key.ts` centralise les `data-testid` (`enum TestKey`).
+  - Les clés dynamiques utilisent `withParam('nomParam', valeur)` et suivent le format `key,param=value`.
+  - `tests/fonc/tests/fixtures/base-test.ts` expose la `BaseTest` et les fixtures communes.
+  - Les actions UI sont encapsulées dans des features dédiées (`tests/fonc/tests/features/*`).
+  - Les specs (`tests/fonc/tests/specs/*`) consomment uniquement `BaseTest` + features et utilisent des annotations Playwright (tags + annotations).
 
 ## Migration et seed Liquibase (manuel)
 Le backend est configure pour une execution **manuelle** des migrations Liquibase.

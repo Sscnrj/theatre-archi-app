@@ -1,13 +1,21 @@
-<header class="topbar">
-  <a routerLink="/spectacles" class="brand">Theatre Archi</a>
+<header class="topbar" data-testid="header">
+  <a routerLink="/spectacles" class="brand" data-testid="header-brand">Theatre Archi</a>
 
-  <nav class="menu">
-    <a routerLink="/spectacles" routerLinkActive="active">Spectacles</a>
-    <a routerLink="/reservations" routerLinkActive="active">Mes reservations</a>
+  <nav class="menu" data-testid="header-menu">
+    <a routerLink="/spectacles" routerLinkActive="active" data-testid="nav-spectacles-link">Spectacles</a>
+    <a
+      routerLink="/reservations"
+      routerLinkActive="active"
+      data-testid="nav-reservations-link"
+    >
+      Mes reservations
+    </a>
   </nav>
 
-  <div class="session">
-    <span *ngIf="!authEnabled" class="mode-badge">Mode demo (auth desactivee)</span>
+  <div class="session" data-testid="session-container">
+    <span *ngIf="!authEnabled" class="mode-badge" data-testid="session-mode-badge">
+      Mode demo (auth desactivee)
+    </span>
 
     <ng-container *ngIf="session() as currentSession; else loggedOut">
       <span class="user-email" data-testid="session-user-email">{{ currentSession.user.email }}</span>
